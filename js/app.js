@@ -40,7 +40,8 @@ let enemy1 = new Enemy(-100,225);
 let enemy2 = new Enemy(-300,140);
 let enemy3 = new Enemy(-500,60);
 // Place all enemy objects in an array called allEnemies
-
+const allEnemies = [];
+allEnemies.push(enemy1,enemy2,enemy3);
 // Place the player object in a ;variable called player
 
 // This listens for key presses and sends the keys to your
