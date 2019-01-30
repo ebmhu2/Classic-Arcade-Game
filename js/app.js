@@ -23,7 +23,16 @@ class Enemy {
             enemyV.speed = 160 ;
         });
         this.x = this.x + (this.speed * dt);
+        //reset enemy's position
+        if (this.x >= 500) {
+            this.resetPosition();
+        }
 
+    }
+    //reset position for enemy
+    resetPosition() {
+        this.x = this.xPoint;
+        this.y = this.yPoint;
     }
 
     // Draw the enemy on the screen, required method for game
