@@ -36,8 +36,34 @@ class Enemy {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+class Player {
+    constructor(x,y){
+        this.x = x;
+        this.y = y;
+        this.sprite = 'images/char-boy.png';
+    }
+    update(){
 
-
+    }
+    render(){
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+        console.log(this.x);
+    }
+    handleInput(allowedKeys){
+        if(allowedKeys === 'left' && this.x > 0){
+            this.x -= 100;
+        }
+        if(allowedKeys === 'right' && this.x <400){
+            this.x += 100;
+        }
+        if(allowedKeys === 'up' && this.y > 0){
+            this.y -= 85;
+        }
+        if(allowedKeys === 'down' && this.y <400){
+            this.y += 85;
+        }
+    }
+}
 
 // Now instantiate your objects.
 let enemy1 = new Enemy(-100,225);
