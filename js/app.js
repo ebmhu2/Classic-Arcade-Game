@@ -19,6 +19,10 @@ class Enemy {
         // You should multiply any movement by the dt parameter
         // which will ensure the game runs at the same speed for
         // all computers.
+        allEnemies.forEach(function (enemyV) {
+            enemyV.speed = 160 ;
+        });
+        this.x = this.x + (this.speed * dt);
 
     }
 
