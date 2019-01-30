@@ -36,7 +36,9 @@ class Enemy {
 
 
 // Now instantiate your objects.
-
+let enemy1 = new Enemy(-100,225);
+let enemy2 = new Enemy(-300,140);
+let enemy3 = new Enemy(-500,60);
 // Place all enemy objects in an array called allEnemies
 
 // Place the player object in a ;variable called player
