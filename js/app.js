@@ -73,7 +73,7 @@ let enemy3 = new Enemy(-500,60);
 const allEnemies = [];
 allEnemies.push(enemy1,enemy2,enemy3);
 // Place the player object in a ;variable called player
-
+const player = new Player(100,400);
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
