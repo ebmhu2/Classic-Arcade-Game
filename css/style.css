@@ -1,3 +1,38 @@
 body {
     text-align: center;
 }
+
+.game-container {
+    display: none;
+}
+
+.choose-player {
+    display: inline-block;
+    border: darkslateblue solid 5px ;
+    text-align: center;
+    width: fit-content;
+    margin-top: 200px;
+    padding: 10px;
+    box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
+    z-index: 1;
+}
+
+
+.choose-player li {
+    list-style: none;
+    display:inline-block;
+    opacity: 0.5;
+    cursor: default;
+}
+
+
+.choose-player li:hover {
+    background: url("../images/Selector.png") no-repeat ;
+    opacity: 1;
+    cursor: pointer;
+}
+
+
+
+
+
