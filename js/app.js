@@ -55,7 +55,9 @@ class Enemy {
         // we've provided one for you to get started
         // The image/sprite for our enemies, this uses
         // a helper we've provided to easily load images
-        this.sprite = 'images/enemy-bug.png';
+        const enemyLinks = ['images/enemy-bug.png', 'images/enemy-bug2.png', 'images/enemy-bug3.png'];
+        let randomEnemyLinkIndex = randomCollectibles(0, 3);
+        this.sprite = enemyLinks[randomEnemyLinkIndex];
         this.x = x;
         this.y = y;
         this.xPoint = x;
