@@ -204,13 +204,12 @@ class Player {
      * play sound for collecting
      */
     collectKeys() {
-        if (this.gameLevel === 5 ) {
-            showModal(this.gameLevel,this.gemsCollected);
-        } else if (this.gameLevel < 6) {
-            this.gameLevel += 1;
-            levelCountElement.textContent = this.gameLevel;
-            updateScore();
-            collectSound.play();
+        this.gameLevel += 1;
+        levelCountElement.textContent = this.gameLevel;
+        updateScore();
+        collectSound.play();
+        if (this.gameLevel === 6) {
+            showModal(this.gameLevel, this.gemsCollected);
         }
     }
 
@@ -419,14 +418,15 @@ class Modal {
                 resetGame();
             }
         });
-        if (level > 4) {
+        if (level > 5) {
             modalHeading.textContent = `Congratulation You Won Game`;
+            modalLevel.textContent = `You reached to Final `;
             gameWinSound.play();
         } else {
             modalHeading.textContent = `Game Over`;
+            modalLevel.textContent = `You reached to level ${level} `;
             gameOverSound.play();
         }
-        modalLevel.textContent = `You reached to level ${level} `;
         modalScore.innerHTML = `with score ${scoreCountElement.textContent}`;
         modalGemCollected.innerHTML = `You collect ${gemCollected} <i class="fa fa-lg fa-diamond"></i>`;
         modalTimer.innerHTML = `in Time <i class="fa fa-lg fa-clock-o"></i> ${minutesElement.textContent}:${secondsElement.textContent}`

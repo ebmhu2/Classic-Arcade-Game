@@ -12,7 +12,7 @@
  To play the game use arrow keys :arrow_up: :arrow_down: :arrow_right: :arrow_left: 
  try to cross the road reach to the water and collect gems :gem: without colliding 
  into any of the enemies.
-## Technologies used
+## Technologies-used
  * HTML and HTML5
  * CSS and CSS3 
  * JAVASCRIPT and ES6
@@ -50,19 +50,22 @@
     - Player win the game when he reach to level 5 and collect key after reach to water 10 times.
     - Player lose when he lose all lives.
     - Once the game ends a modal will appear, containing the total timer, scores , level and Gems collected.
+ *Game Level
+    - Game consist of 5 Level , speed of enemies multiplied by game level
+    - Once player collect a key :key: , he will go to next level
+    - In level 5 when he collect key , he won the game
  * In Modal pop-up
    - The user can click the play again button to restart the game.
  
- 
-
 ## Additional-Functionality
  * Player Selection at game start
  * Score calculated from reaching to water and collecting gems and multiplied by game level
  * Collectibles : add gems ,hearts and level keys allowing player to collect them .
  * Game timer
- * multiple type of vehicle 
- * blood appear on collision
- * add Game sound
+ * Multiple type of vehicle 
+ * Blood appear on collision
+ * Add Game sound
+ * Add star object that indicate score value that added to total score when collect gem or reach to water.
  
  ## Resources
  * Sounds are from [8-Bit Sound Effects Library](https://opengameart.org/content/8-bit-sound-effects-library) on [Open Game Art](https://opengameart.org/)
