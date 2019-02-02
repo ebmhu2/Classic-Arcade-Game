@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Classic Arcade Game</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Press+Start+2P">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
     <canvas class="game-container" width="505" height="606"></canvas>
@@ -18,7 +20,37 @@
             <li><img class="char-princess" src="images/char-princess-girl.png" alt="char-princess"></li>
         </ul>
     </div>
-    <div class="score-panel"></div>
+    <div class="score-panel">
+        <div class="game-hearts">
+            <i class="fa fa-lg fa-heart"></i><i class="fa fa-lg fa-heart"></i><i class="fa fa-lg fa-heart"></i><i class="fa fa-lg fa-heart"></i><i class="fa fa-lg fa-heart"></i>
+        </div>
+        <div class="game-timer">
+            <i class="fa fa-lg fa-clock-o"></i> <span class="timer-gem"><label class="minutes">00</label>:<label class="seconds">00</label></span>
+        </div>
+        <div class="game-gems">
+            <i class="fa fa-lg fa-diamond"></i> <span class="timer-gem gem-count">00</span>
+        </div>
+
+    </div>
+    <div class="score-panel2">
+        <div class="game-level">
+            <span>Level:</span><span class="level-count">1</span>
+        </div>
+        <div class="game-score">
+            <span>Score:</span><span class="score-count">000</span>
+        </div>
+    </div>
+    <div class="modal disabled">
+        <h2 class="modal-heading"></h2>
+        <div class="modal-result">
+            <h3 class="modal-score-heading"></h3>
+            <p class="modal-level"></p>
+            <p class="modal-score"></p>
+            <p class="modal-gem-collected"></p>
+            <p class="modal-timer"></p>
+            <button class="modal-button">Play again</button>
+        </div>`
+    </div>
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>

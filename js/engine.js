@@ -13,7 +13,7 @@
  * writing app.js a little simpler to work with.
  */
 
-var Engine = (function(global) {
+var Engine = (function (global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas element's height/width and add it to the DOM.
@@ -80,8 +80,71 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
     }
+
+    function checkCollisions() {
+        allEnemies.forEach(function (enemy) {
+            if (player.x < enemy.x + 40 && player.x + 40 > enemy.x &&
+                player.y < enemy.y + 10 && player.y + 10 > enemy.y) {
+                // display blood
+                bloodObject = new Blood(player.x + 10, player.y + 40);
+                player.killedByEnemy();
+                // hide player
+                player.hide();
+                setTimeout(function () {
+                    bloodObject.hide();
+                    player.resetPosition();
+                }, 1000);
+            }
+        });
+        collect2d(player, key);
+        collect2d(player, heart);
+        collect2d(player, gem);
+        if (player.reachToWaterCount % 10 === 0 && player.reachToWaterCount > 0 && key.x === -900) {
+            player.reachToWaterCount += 1;
+            heart.hide();
+            gem.hide();
+            key = new Key();
+            setTimeout(function () {
+                key.hide();
+                gem = new Gems();
+            }, 5000);
+        } else if (player.reachToWaterCount % 5 === 0 && player.reachToWaterCount > 0 && heart.x === -700 && key.x === -900 && player.life < 5) {
+            player.reachToWaterCount += 1;
+            gem.hide();
+            heart = new Heart();
+            setTimeout(function () {
+                heart.hide();
+                gem = new Gems();
+            }, 5000);
+        }
+
+    }
+
+    function collect2d(object1, object2) {
+        if (object2.x < object1.x + 40 && object2.x + 40 > object1.x &&
+            object2.y < object1.y + 50 && object2.y + 10 > object1.y) {
+            object2.hide();
+            switch (object2) {
+                case gem:
+                    object1.collectGems();
+                    if (heart.x === -700, key.x === -900) {
+                        setTimeout(function () {
+                            gem = new Gems();
+                        }, 1000);
+                    }
+                    break;
+                case key:
+                    object1.collectKeys();
+                    break;
+                case heart:
+                    object1.collectHearts();
+                    break;
+            }
+        }
+    }
+
 
     /* This is called by the update function and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
@@ -91,7 +154,7 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        allEnemies.forEach(function(enemy) {
+        allEnemies.forEach(function (enemy) {
             enemy.update(dt);
         });
         player.update();
@@ -121,7 +184,7 @@ var Engine = (function(global) {
             row, col;
 
         // Before drawing, clear existing canvas
-        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         /* Loop through the number of rows and columns we've defined above
          * and, using the rowImages array, draw the correct image for that
@@ -151,13 +214,16 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        allEnemies.forEach(function(enemy) {
+        allEnemies.forEach(function (enemy) {
             enemy.render();
         });
 
         player.render();
         gem.render();
         bloodObject.render();
+        heart.render();
+        key.render();
+        star.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -182,10 +248,13 @@ var Engine = (function(global) {
         'images/char-horn-girl.png',
         'images/char-pink-girl.png',
         'images/char-princess-girl.png',
-        'images/Gem-Blue.png',
-        'images/Gem-Green.png',
-        'images/Gem-Orange.png',
-        'images/blood2.png'
+        'images/gem-blue.png',
+        'images/gem-green.png',
+        'images/gem-orange.png',
+        'images/blood2.png',
+        'images/heart.png',
+        'images/key.png',
+        'images/star.png'
     ]);
     Resources.onReady(init);
 
@@ -194,4 +263,5 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
-})(this);
+})
+(this);
