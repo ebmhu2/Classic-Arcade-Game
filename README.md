@@ -7,6 +7,8 @@
  * [Additional Functionality](#Additional-Functionality)
 
 ## Instructions
+#####How to run the Game ?
+You can run the game locally by Open the `index.html` file on the browser.
 ## Getting-started
  In this game You have a Player and Enemies(bugs).
  To play the game use arrow keys :arrow_up: :arrow_down: :arrow_right: :arrow_left: 
