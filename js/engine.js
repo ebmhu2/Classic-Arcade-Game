@@ -5,7 +5,7 @@
  *
  * A game engine works by drawing the entire game screen over and over, kind of
  * like a flipbook you may have created as a kid. When your player moves across
- * the screen, it may look like just that image/character is moving or being
+ * the screen, it may look like just that image/GameObject is moving or being
  * drawn but that is not the case. What's really happening is the entire "scene"
  * is being drawn over and over, presenting the illusion of animation.
  *
@@ -68,7 +68,7 @@ var Engine = (function (global) {
     /* This function is called by main (our game loop) and itself calls all
      * of the functions which may need to update entity's data. Based on how
      * you implement your collision detection (when two entities occupy the
-     * same space, for instance when your character should die), you may find
+     * same space, for instance when your GameObject should die), you may find
      * the need to add an additional function call here. For now, we've left
      * it commented out - you may or may not want to implement this
      * functionality this way (you could just implement collision detection
@@ -145,7 +145,7 @@ var Engine = (function (global) {
             switch (object2) {
                 case gem:
                     object1.collectGems();
-                    if (heart.x === -700, key.x === -900) {
+                    if (heart.x === -700 && key.x === -900) {
                         setTimeout(function () {
                             gem = new Gems();
                         }, 1000);

@@ -1,3 +1,5 @@
+// Whole-script strict mode syntax
+'use strict';
 // Create a list that holds all of possible location for Collectibles
 const CollectiblesLocation = [
     [10, 107],
@@ -16,6 +18,7 @@ const CollectiblesLocation = [
     [313, 275],
     [414, 275],
 ];
+
 // declaring objects for player, blood and collectibles
 let gem, heart, key, star, player, bloodObject;
 
@@ -61,18 +64,57 @@ gameOverSound.preload = 'auto';
 gameWinSound.preload = 'auto';
 gameMusic.preload = 'auto';
 
+/** Class representing a GameObject super class */
+class GameObject {
+    /**
+     * @constructor Create GameObject
+     * @param {number} x - The x coordinate where to place the object on the canvas
+     * @param {number} y - The y coordinate where to place the object on the canvas
+     * @param {string} link - file path for GameObject image
+     */
+    constructor(x, y, link) {
+        this.x = x;
+        this.y = y;
+        this.sprite = link;
+    }
+
+    /**
+     * @description Draw the object on the screen
+     */
+    render() {
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
+
+    /**
+     * @description Draw the object on the screen
+     * @param {number} w - The width of the clipped image
+     * @param {number} h - The height of the clipped image
+     */
+    render2(w, h) {
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y, w, h);
+    }
+
+    /**
+     * @description used to hide object
+     * @param {number} x - The x coordinate where to place the object on the canvas
+     * @param {number} y - The y coordinate where to place the object on the canvas
+     */
+    hide(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+
 
 /** Class representing a enemy. */
-class Enemy {
+class Enemy extends GameObject {
     /**
      * @constructor Create enemy
      * @param {number} x - The x coordinate where to place the enemy image on the canvas
      * @param {number} y - The y coordinate where to place the enemy image on the canvas
      */
     constructor(x, y) {
-        this.sprite = 'images/enemy-bug.png';
-        this.x = x;
-        this.y = y;
+        super(x, y, 'images/enemy-bug.png');
         this.xPoint = x;
         this.yPoint = y;
     }
@@ -112,24 +154,21 @@ class Enemy {
      * @description Draw the enemy on the screen
      */
     render() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+        super.render();
     }
-
 }
 
 
 /** Class representing a player. */
-class Player {
+class Player extends GameObject {
     /**
      * @constructor Create player
      * @param {number} x - The x coordinate where to place the player image on the canvas
      * @param {number} y - The y coordinate where to place the player image on the canvas
-     * @param {string} link - file path for player character image
+     * @param {string} link - file path for player GameObject image
      */
     constructor(x, y, link) {
-        this.x = x;
-        this.y = y;
-        this.sprite = link;
+        super(x, y, link);
         this.gemsCollected = 0;
         this.life = 5;
         this.gameLevel = 1;
@@ -140,7 +179,7 @@ class Player {
      * @description Draw the player on the screen.
      */
     render() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+        super.render();
     }
 
     /**
@@ -160,9 +199,9 @@ class Player {
         if (allowedKeys === 'down' && this.y < 400) {
             this.y += 85;
         }
-        if (player.y < 0) {
+        if (this.y < 0) {
             this.resetPosition();
-            player.reachToWaterCount += 1;
+            this.reachToWaterCount += 1;
             star = new Star(this.gameLevel * 40);
             updateScore();
             setTimeout(function () {
@@ -217,8 +256,7 @@ class Player {
      * @description used to hide player
      */
     hide() {
-        this.x = -300;
-        this.y = -300;
+        super.hide(-300, -300);
     }
 
     /**
@@ -232,7 +270,7 @@ class Player {
         killSound.play();
         lifeCounter(this.life);
         if (this.life === 0) {
-            showModal(this.gameLevel,this.gemsCollected);
+            showModal(this.gameLevel, this.gemsCollected);
         }
     }
 
@@ -247,7 +285,7 @@ class Player {
 
 
 /** Class representing a Gems */
-class Gems {
+class Gems extends GameObject {
     /**
      * @constructor Create a gem
      */
@@ -255,126 +293,112 @@ class Gems {
         const gemLinks = ['images/gem-blue.png', 'images/gem-green.png', 'images/gem-orange.png'];
         let randomGemLocationIndex = randomCollectibles(0, CollectiblesLocation.length);
         let randomGemLinkIndex = randomCollectibles(0, 3);
-        this.x = CollectiblesLocation[randomGemLocationIndex][0];
-        this.y = CollectiblesLocation[randomGemLocationIndex][1];
-        this.sprite = gemLinks[randomGemLinkIndex];
+        super(CollectiblesLocation[randomGemLocationIndex][0], CollectiblesLocation[randomGemLocationIndex][1], gemLinks[randomGemLinkIndex]);
     }
 
     /**
      * @description Draw a gem on the screen.
      */
     render() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 80, 100);
+        super.render2(80, 100);
     }
 
     /**
      * @description used to hide gem
      */
     hide() {
-        this.x = -500;
-        this.y = -500;
+        super.hide(-500, -500);
     }
 
 }
 
 
 /** Class representing blood */
-class Blood {
+class Blood extends GameObject {
     /**
      * @constructor Create blood
      * @param {number} x - The x coordinate where to place the blood image on the canvas
      * @param {number} y - The y coordinate where to place the blood image on the canvas
      */
     constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.sprite = 'images/blood2.png';
+        super(x, y, 'images/blood2.png');
     }
 
     /**
      * @description Draw a blood on the screen.
      */
     render() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 100, 120);
+        super.render2(100, 120);
     }
 
     /**
      * @description used to hide blood
      */
     hide() {
-        this.x = -100;
-        this.y = -100;
+        super.hide(-100, -100);
     }
 }
 
 
 /** Class representing a Heart. */
-class Heart {
+class Heart extends GameObject {
     /**
      * @constructor Create a heart
      */
     constructor() {
         let randomHeartLocationIndex = randomCollectibles(0, CollectiblesLocation.length);
-        this.x = CollectiblesLocation[randomHeartLocationIndex][0];
-        this.y = CollectiblesLocation[randomHeartLocationIndex][1];
-        this.sprite = 'images/heart.png';
+        super(CollectiblesLocation[randomHeartLocationIndex][0], CollectiblesLocation[randomHeartLocationIndex][1], 'images/heart.png');
     }
 
     /**
      * @description Draw a heart on the screen.
      */
     render() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 80, 100);
+        super.render2(80, 100);
     }
 
     /**
      * @description used to hide heart
      */
     hide() {
-        this.x = -700;
-        this.y = -700;
+        super.hide(-700, -700);
     }
 }
 
 
 /** Class representing a key. */
-class Key {
+class Key extends GameObject {
     /**
      * @constructor Create a key
      */
     constructor() {
         let randomKeyLocationIndex = randomCollectibles(0, CollectiblesLocation.length);
-        this.x = CollectiblesLocation[randomKeyLocationIndex][0];
-        this.y = CollectiblesLocation[randomKeyLocationIndex][1];
-        this.sprite = 'images/key.png';
+        super(CollectiblesLocation[randomKeyLocationIndex][0], CollectiblesLocation[randomKeyLocationIndex][1], 'images/key.png');
     }
 
     /**
      * @description Draw a key on the screen.
      */
     render() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 80, 100);
+        super.render2(80, 100);
     }
 
     /**
      * @description used to hide key
      */
     hide() {
-        this.x = -900;
-        this.y = -900;
+        super.hide(-900, -900);
     }
 }
 
 
 /** Class representing a star. */
-class Star {
+class Star extends GameObject {
     /**
      * @constructor Create a star
      */
     constructor(score) {
-        this.x = 200;
-        this.y = 0;
-        this.sprite = 'images/star.png';
+        super(200, 0, 'images/star.png');
         this.score = score;
     }
 
@@ -382,7 +406,7 @@ class Star {
      * @description Draw a star on the screen.
      */
     render() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+        super.render();
         ctx.font = 'bold 30px serif';
         ctx.fillStyle = 'brown';
         ctx.fillText(`+${this.score}`, this.x + 20, this.y + 115);
@@ -394,8 +418,7 @@ class Star {
      * @description used to hide star
      */
     hide() {
-        this.x = -400;
-        this.y = -400;
+        super.hide(-400, -400);
     }
 
 }
@@ -488,8 +511,8 @@ function randomCollectibles(min, max) {
 
 
 /**
-* @description used to start game
-*/
+ * @description used to start game
+ */
 function startGame() {
     let choosePlayerContainer = document.querySelector('.choose-player');
     choosePlayerContainer.style.display = 'none';
@@ -508,8 +531,8 @@ function startGame() {
  * @param {number} level - passing game level variable to display it in modal
  * @param {number} gemCollected - passing gemCollected variable to display it in modal
  */
-function showModal(level,gemCollected) {
-    const modal = new Modal(document.querySelector('.modal'),level,gemCollected);
+function showModal(level, gemCollected) {
+    const modal = new Modal(document.querySelector('.modal'), level, gemCollected);
     window.openModal = modal.open.bind(modal);
     window.openModal();
     clearInterval(gameTimer);
@@ -611,7 +634,7 @@ document.addEventListener('keyup', function (e) {
 let playerList = document.querySelector('.players-list');
 
 /**
- * @description listens for clicks and choosing player character
+ * @description listens for clicks and choosing player GameObject
  * Using Event delegation by adding one event listener to
  * player list instead of adding 5 event listener to
  * 5 Elements

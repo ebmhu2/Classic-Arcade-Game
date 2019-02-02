@@ -27,7 +27,7 @@
   ```
 ## Rules-of-the-game
 
- * Player selection : allow the user to select the image for player character before starting the game.
+ * Player selection : allow the user to select the image for player GameObject before starting the game.
  * The player can move left , right, up and down.
  * The player has 5 lives.
  * The enemies move at varying speed on the paved block portion of the game board.

@@ -16,7 +16,7 @@ body {
     margin: 100px;
 }
 
-/* Styles for the start screen for choosing player character */
+/* Styles for the start screen for choosing player GameObject */
 .choose-player {
     display: inline-block;
     border: darkslateblue solid 5px;
