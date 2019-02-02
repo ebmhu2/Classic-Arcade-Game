@@ -25,10 +25,6 @@ var Engine = (function (global) {
         ctx = canvas.getContext('2d'),
         lastTime;
 
-    // canvas.width = 505;
-    // canvas.height = 606;
-    // doc.body.appendChild(canvas);
-    // canvas.className='game-container';
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
      */
@@ -83,6 +79,9 @@ var Engine = (function (global) {
         checkCollisions();
     }
 
+    /**
+     * @description used for 2d collision detection
+     */
     function checkCollisions() {
         allEnemies.forEach(function (enemy) {
             if (player.x < enemy.x + 40 && player.x + 40 > enemy.x &&
@@ -101,6 +100,12 @@ var Engine = (function (global) {
         collect2d(player, key);
         collect2d(player, heart);
         collect2d(player, gem);
+        /* if player reach to water 10 times
+         * key object will appear for 5 seconds to be collected
+         * if player failed to collect key he will try again
+         * to reach to water 10 times until key appear.
+         * if player success to collect key he will go to next level
+         */
         if (player.reachToWaterCount % 10 === 0 && player.reachToWaterCount > 0 && key.x === -900) {
             player.reachToWaterCount += 1;
             heart.hide();
@@ -110,6 +115,12 @@ var Engine = (function (global) {
                 key.hide();
                 gem = new Gems();
             }, 5000);
+            /* if player reach to water 5 times
+             * heart object will appear for 5 seconds to be collected
+             * if player failed to collect heart he will try again
+             * to reach to water 5 times until heart appear.
+             * if player success to collect heart he will get life for player object
+             */
         } else if (player.reachToWaterCount % 5 === 0 && player.reachToWaterCount > 0 && heart.x === -700 && key.x === -900 && player.life < 5) {
             player.reachToWaterCount += 1;
             gem.hide();
@@ -119,9 +130,14 @@ var Engine = (function (global) {
                 gem = new Gems();
             }, 5000);
         }
-
     }
 
+
+    /**
+     * @description used for 2d collision detection between two objects
+     * @param {object} object1 - first object
+     * @param {object} object2 - second object
+     */
     function collect2d(object1, object2) {
         if (object2.x < object1.x + 40 && object2.x + 40 > object1.x &&
             object2.y < object1.y + 50 && object2.y + 10 > object1.y) {
@@ -157,8 +173,6 @@ var Engine = (function (global) {
         allEnemies.forEach(function (enemy) {
             enemy.update(dt);
         });
-        player.update();
-        gem.update();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -243,7 +257,7 @@ var Engine = (function (global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/enemy-bug2.png',
+        'images/green-enemy-bug.png',
         'images/enemy-bug3.png',
         'images/char-boy.png',
         'images/char-cat-girl.png',

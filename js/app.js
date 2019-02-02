@@ -1,3 +1,4 @@
+// Create a list that holds all of possible location for Collectibles
 const CollectiblesLocation = [
     [10, 107],
     [111, 107],
@@ -15,61 +16,72 @@ const CollectiblesLocation = [
     [313, 275],
     [414, 275],
 ];
-let gem, heart, key, star;
-let player;
-let bloodObject;
+// declaring objects for player, blood and collectibles
+let gem, heart, key, star, player, bloodObject;
+
+// declaring and initialize game container canvas element
+const canvasGame = document.querySelector('.game-container');
+
+// declaring and initialize score panel elements
+const scorePanel = document.querySelector('.score-panel');
+const scorePanel2 = document.querySelector('.score-panel2');
 const heartCountElement = document.querySelector('.game-hearts');
 const gemCountElement = document.querySelector('.gem-count');
 const minutesElement = document.querySelector('.minutes');
 const secondsElement = document.querySelector('.seconds');
 const levelCountElement = document.querySelector('.level-count');
 const scoreCountElement = document.querySelector('.score-count');
+
+// declaring and initialize modal elements
 const modalHeading = document.querySelector('.modal-heading');
-const modalScoreHeading = document.querySelector('.modal-score-heading');
 const modalLevel = document.querySelector('.modal-level');
 const modalScore = document.querySelector('.modal-score');
 const modalGemCollected = document.querySelector('.modal-gem-collected');
 const modalTimer = document.querySelector('.modal-timer');
 const modalButton = document.querySelector('.modal-button');
-const canvasGame = document.querySelector(".game-container");
-const scorePanel = document.querySelector(".score-panel");
-const scorePanel2 = document.querySelector(".score-panel2");
+
+// Game Timer
+let totalSeconds = 0;
+let gameTimer;
+
+// declaring and initialize Game Sound
 const gameOverSound = new Audio('sound/jingle-Lose.mp3');
 const gameWinSound = new Audio('sound/jingle-win.mp3');
 const collectSound = new Audio('sound/collect-point.mp3');
 const killSound = new Audio('sound/explosion.mp3');
 const gameMusic = new Audio('sound/battle-theme.mp3');
-let totalSeconds = 0;
-let gameTimer;
 
+/*
+ * preload attribute with auto value Indicates that the whole audio file
+ * can be downloaded, even if the user is not expected to use it.
+ */
 collectSound.preload = 'auto';
 killSound.preload = 'auto';
 gameOverSound.preload = 'auto';
 gameWinSound.preload = 'auto';
 gameMusic.preload = 'auto';
 
-// Enemies our player must avoid
+
+/** Class representing a enemy. */
 class Enemy {
+    /**
+     * @constructor Create enemy
+     * @param {number} x - The x coordinate where to place the enemy image on the canvas
+     * @param {number} y - The y coordinate where to place the enemy image on the canvas
+     */
     constructor(x, y) {
-        // Variables applied to each of our instances go here,
-        // we've provided one for you to get started
-        // The image/sprite for our enemies, this uses
-        // a helper we've provided to easily load images
-        const enemyLinks = ['images/enemy-bug.png', 'images/enemy-bug2.png', 'images/enemy-bug3.png'];
-        let randomEnemyLinkIndex = randomCollectibles(0, 3);
-        this.sprite = enemyLinks[randomEnemyLinkIndex];
+        this.sprite = 'images/enemy-bug.png';
         this.x = x;
         this.y = y;
         this.xPoint = x;
         this.yPoint = y;
     }
 
-    // Update the enemy's position, required method for game
-    // Parameter: dt, a time delta between ticks
+    /**
+     * @description Update the enemy's position
+     * @param {number} dt - the time delta to be used for smooth animation
+     */
     update(dt) {
-        // You should multiply any movement by the dt parameter
-        // which will ensure the game runs at the same speed for
-        // all computers.
         if (this.x === -100) {
             allEnemies.forEach(function (enemyV) {
                 let minSpeed = 100 * player.gameLevel;
@@ -77,7 +89,6 @@ class Enemy {
                 enemyV.speed = randomCollectibles(minSpeed, maxSpeed);
             });
         }
-
         this.x = this.x + (this.speed * dt);
         //reset enemy's position
         if (this.x >= 500) {
@@ -85,23 +96,36 @@ class Enemy {
         }
     }
 
-    //reset position for enemy
+    /**
+     * @description Reset the enemy's position
+     * and do random change type of enemy
+     */
     resetPosition() {
         this.x = this.xPoint;
         this.y = this.yPoint;
+        const enemyLinks = ['images/enemy-bug.png', 'images/green-enemy-bug.png', 'images/enemy-bug3.png'];
+        let randomEnemyLinkIndex = randomCollectibles(0, 3);
+        this.sprite = enemyLinks[randomEnemyLinkIndex];
     }
 
-    // Draw the enemy on the screen, required method for game
+    /**
+     * @description Draw the enemy on the screen
+     */
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
 
 }
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+
+/** Class representing a player. */
 class Player {
+    /**
+     * @constructor Create player
+     * @param {number} x - The x coordinate where to place the player image on the canvas
+     * @param {number} y - The y coordinate where to place the player image on the canvas
+     * @param {string} link - file path for player character image
+     */
     constructor(x, y, link) {
         this.x = x;
         this.y = y;
@@ -112,14 +136,17 @@ class Player {
         this.reachToWaterCount = 0;
     }
 
-    update() {
-
-    }
-
+    /**
+     * @description Draw the player on the screen.
+     */
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
 
+    /**
+     * @description handle input for control player movement direction
+     * @param {string} allowedKeys - keys from keyboard that used for control player
+     */
     handleInput(allowedKeys) {
         if (allowedKeys === 'left' && this.x > 0) {
             this.x -= 100;
@@ -144,6 +171,10 @@ class Player {
         }
     }
 
+    /**
+     * @description invoked when player collect gems to calculate no of gems collected
+     * play sound for collecting
+     */
     collectGems() {
         this.gemsCollected += 1;
         collectSound.play();
@@ -156,6 +187,10 @@ class Player {
 
     }
 
+    /**
+     * @description invoked when player collect heart to update no of player lives
+     * play sound for collecting
+     */
     collectHearts() {
         if (this.life < 5) {
             this.life += 1;
@@ -164,21 +199,33 @@ class Player {
         lifeCounter(this.life);
     }
 
+    /**
+     * @description invoked when player collect key to update game level variable
+     * play sound for collecting
+     */
     collectKeys() {
-        if (this.gameLevel < 5) {
+        if (this.gameLevel === 5 ) {
+            showModal(this.gameLevel,this.gemsCollected);
+        } else if (this.gameLevel < 6) {
             this.gameLevel += 1;
             levelCountElement.textContent = this.gameLevel;
             updateScore();
             collectSound.play();
-
         }
     }
 
+    /**
+     * @description used to hide player
+     */
     hide() {
         this.x = -300;
         this.y = -300;
     }
 
+    /**
+     * @description invoked when enemy collide player to update no of player lives.
+     * play sound for killed
+     */
     killedByEnemy() {
         if (this.life > 0) {
             this.life -= 1;
@@ -186,10 +233,13 @@ class Player {
         killSound.play();
         lifeCounter(this.life);
         if (this.life === 0) {
-            showModal(this.gameLevel, this.gemsCollected, this.reachToWaterCount);
+            showModal(this.gameLevel,this.gemsCollected);
         }
     }
 
+    /**
+     * @description Reset the player's position
+     */
     resetPosition() {
         this.x = 200;
         this.y = 400;
@@ -197,7 +247,11 @@ class Player {
 }
 
 
+/** Class representing a Gems */
 class Gems {
+    /**
+     * @constructor Create a gem
+     */
     constructor() {
         const gemLinks = ['images/gem-blue.png', 'images/gem-green.png', 'images/gem-orange.png'];
         let randomGemLocationIndex = randomCollectibles(0, CollectiblesLocation.length);
@@ -207,14 +261,16 @@ class Gems {
         this.sprite = gemLinks[randomGemLinkIndex];
     }
 
+    /**
+     * @description Draw a gem on the screen.
+     */
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 80, 100);
     }
 
-    update() {
-
-    }
-
+    /**
+     * @description used to hide gem
+     */
     hide() {
         this.x = -500;
         this.y = -500;
@@ -222,25 +278,42 @@ class Gems {
 
 }
 
+
+/** Class representing blood */
 class Blood {
+    /**
+     * @constructor Create blood
+     * @param {number} x - The x coordinate where to place the blood image on the canvas
+     * @param {number} y - The y coordinate where to place the blood image on the canvas
+     */
     constructor(x, y) {
         this.x = x;
         this.y = y;
         this.sprite = 'images/blood2.png';
     }
 
+    /**
+     * @description Draw a blood on the screen.
+     */
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 100, 120);
     }
 
+    /**
+     * @description used to hide blood
+     */
     hide() {
         this.x = -100;
         this.y = -100;
     }
-
 }
 
+
+/** Class representing a Heart. */
 class Heart {
+    /**
+     * @constructor Create a heart
+     */
     constructor() {
         let randomHeartLocationIndex = randomCollectibles(0, CollectiblesLocation.length);
         this.x = CollectiblesLocation[randomHeartLocationIndex][0];
@@ -248,17 +321,28 @@ class Heart {
         this.sprite = 'images/heart.png';
     }
 
+    /**
+     * @description Draw a heart on the screen.
+     */
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 80, 100);
     }
 
+    /**
+     * @description used to hide heart
+     */
     hide() {
         this.x = -700;
         this.y = -700;
     }
 }
 
+
+/** Class representing a key. */
 class Key {
+    /**
+     * @constructor Create a key
+     */
     constructor() {
         let randomKeyLocationIndex = randomCollectibles(0, CollectiblesLocation.length);
         this.x = CollectiblesLocation[randomKeyLocationIndex][0];
@@ -266,17 +350,28 @@ class Key {
         this.sprite = 'images/key.png';
     }
 
+    /**
+     * @description Draw a key on the screen.
+     */
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 80, 100);
     }
 
+    /**
+     * @description used to hide key
+     */
     hide() {
         this.x = -900;
         this.y = -900;
     }
 }
 
+
+/** Class representing a star. */
 class Star {
+    /**
+     * @constructor Create a star
+     */
     constructor(score) {
         this.x = 200;
         this.y = 0;
@@ -284,6 +379,9 @@ class Star {
         this.score = score;
     }
 
+    /**
+     * @description Draw a star on the screen.
+     */
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
         ctx.font = 'bold 30px serif';
@@ -293,6 +391,9 @@ class Star {
 
     }
 
+    /**
+     * @description used to hide star
+     */
     hide() {
         this.x = -400;
         this.y = -400;
@@ -300,8 +401,16 @@ class Star {
 
 }
 
+
+/** Class representing a Modal. */
 class Modal {
-    constructor(overlay, level, gemCollected, reachToWater) {
+    /**
+     * @constructor Create Modal
+     * @param {object} overlay - modal document element
+     * @param {number} level - passing game level variable to display it in modal
+     * @param {number} gemCollected - passing gemCollected variable to display it in modal
+     */
+    constructor(overlay, level, gemCollected) {
         this.overlay = overlay;
         modalButton.addEventListener('click', this.close.bind(this));
         overlay.addEventListener('click', e => {
@@ -310,29 +419,39 @@ class Modal {
                 resetGame();
             }
         });
-        if (level > 4 && reachToWater > 10) {
+        if (level > 4) {
             modalHeading.textContent = `Congratulation You Won Game`;
             gameWinSound.play();
         } else {
             modalHeading.textContent = `Game Over`;
             gameOverSound.play();
         }
-        modalScoreHeading.textContent = ``;
         modalLevel.textContent = `You reached to level ${level} `;
-        modalScore.innerHTML = `with Final score ${scoreCountElement.textContent}`;
+        modalScore.innerHTML = `with score ${scoreCountElement.textContent}`;
         modalGemCollected.innerHTML = `You collect ${gemCollected} <i class="fa fa-lg fa-diamond"></i>`;
         modalTimer.innerHTML = `in Time <i class="fa fa-lg fa-clock-o"></i> ${minutesElement.textContent}:${secondsElement.textContent}`
     }
 
+    /**
+     * @description used to display modal on screen
+     */
     open() {
         this.overlay.classList.remove('disabled');
     }
 
+    /**
+     * @description used to close modal
+     */
     close() {
         this.overlay.classList.add('disabled');
     }
 }
 
+
+/**
+ * @description used to update hearts on score panel based on player life variable
+ * @param {number} life - number of player lives
+ */
 function lifeCounter(life) {
     switch (life) {
         case 5:
@@ -356,10 +475,21 @@ function lifeCounter(life) {
     }
 }
 
+
+/**
+ * @description used to generate random number between min and max parameters
+ * @param {number} min - min number for possible random numbers
+ * @param {number} max - max number for possible random numbers
+ * @return [number] - random number between min and max parameters
+ */
 function randomCollectibles(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
+
+/**
+* @description used to start game
+*/
 function startGame() {
     let choosePlayerContainer = document.querySelector('.choose-player');
     choosePlayerContainer.style.display = 'none';
@@ -368,12 +498,18 @@ function startGame() {
     scorePanel2.style.display = 'flex';
     gameTimer = setInterval(setTime, 1000);
     gameMusic.play();
-    gameMusic.volume=0.2;
+    gameMusic.volume = 0.2;
     gameMusic.loop = true;
 }
 
-function showModal(level, gemCollected, reachToWater) {
-    const modal = new Modal(document.querySelector('.modal'), level, gemCollected, reachToWater);
+
+/**
+ * @description used to show modal after game end
+ * @param {number} level - passing game level variable to display it in modal
+ * @param {number} gemCollected - passing gemCollected variable to display it in modal
+ */
+function showModal(level,gemCollected) {
+    const modal = new Modal(document.querySelector('.modal'),level,gemCollected);
     window.openModal = modal.open.bind(modal);
     window.openModal();
     clearInterval(gameTimer);
@@ -385,21 +521,39 @@ function showModal(level, gemCollected, reachToWater) {
 
 }
 
+
+/**
+ * @description used to reset game
+ */
 function resetGame() {
     window.location.reload(false);
 }
 
+
+/**
+ * @description used to update game score
+ */
 function updateScore() {
     scoreCountElement.textContent = ((player.gemsCollected * 10) + (player.reachToWaterCount * 40)) * player.gameLevel;
 }
 
-// Timer from stackoverflow, https://stackoverflow.com/questions/5517597/plain-count-up-timer-in-javascript
+
+/**
+ * @description used to run game timer
+ * Timer function from stackoverflow, https://stackoverflow.com/questions/5517597/plain-count-up-timer-in-javascript
+ */
 function setTime() {
     ++totalSeconds;
     secondsElement.innerHTML = pad(totalSeconds % 60);
     minutesElement.innerHTML = pad(parseInt(totalSeconds / 60));
 }
 
+
+/**
+ * @description used to put 0 before minutes and seconds if their string length < 2
+ * Timer function from stackoverflow, https://stackoverflow.com/questions/5517597/plain-count-up-timer-in-javascript
+ * @return [string] valString - minutes or seconds
+ */
 function pad(val) {
     let valString = val + '';
     if (valString.length < 2) {
@@ -409,27 +563,39 @@ function pad(val) {
     }
 }
 
-// Now instantiate your objects.
+// instantiate enemies object
 let enemy1 = new Enemy(-100, 225);
 let enemy2 = new Enemy(-300, 140);
 let enemy3 = new Enemy(-500, 60);
-bloodObject = new Blood(-300, 800);
-gem = new Gems();
-heart = new Heart();
-heart.hide();
-key = new Key();
-key.hide();
-star = new Star(0);
-star.hide();
-player = new Player(200, 400, 'images/char-boy.png');
 // Place all enemy objects in an array called allEnemies
 const allEnemies = [];
 allEnemies.push(enemy1, enemy2, enemy3);
-// Place the player object in a ;variable called player
 
+// instantiate player object
+player = new Player(200, 400, 'images/char-boy.png');
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// instantiate blood object
+bloodObject = new Blood(-300, 800);
+
+// instantiate gem object
+gem = new Gems();
+
+// instantiate heart object
+heart = new Heart();
+heart.hide();
+
+// instantiate key object
+key = new Key();
+key.hide();
+
+// instantiate star object
+star = new Star(0);
+star.hide();
+
+/**
+ * @description listens for key presses and sends the keys to
+ * Player.handleInput() method
+ */
 document.addEventListener('keyup', function (e) {
     let allowedKeys = {
         37: 'left',
@@ -440,7 +606,16 @@ document.addEventListener('keyup', function (e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
+
+// declaring and initialize player list element
 let playerList = document.querySelector('.players-list');
+
+/**
+ * @description listens for clicks and choosing player character
+ * Using Event delegation by adding one event listener to
+ * player list instead of adding 5 event listener to
+ * 5 Elements
+ */
 playerList.addEventListener('click', function (evt) {
     if (evt.target.nodeName === 'IMG') {
         let characterVariable = evt.target.className;
@@ -464,7 +639,6 @@ playerList.addEventListener('click', function (evt) {
         }
         player = new Player(200, 400, characterLink);
         startGame();
-
     }
 });
 
