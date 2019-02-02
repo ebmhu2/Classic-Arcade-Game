@@ -1,13 +1,13 @@
 # Classic Arcade Game Project
  This is browser-based arcade game, created as a project for Udacity FEND Nanodegree.
 ## Table of Contents
- * [Getting started](#Getting started)
+ * [Getting started](#Getting-started)
  * [Project-Dependencies](#Project-Dependencies)
- * [Rules of the game](#Rules of the game)
- * [Additional Functionality](#Additional Functionality)
+ * [Rules of the game](#Rules-of-the-game)
+ * [Additional Functionality](#Additional-Functionality)
 
 ## Instructions
-## Getting started
+## Getting-started
  In this game You have a Player and Enemies(bugs).
  To play the game use arrow keys :arrow_up: :arrow_down: :arrow_right: :arrow_left: 
  try to cross the road reach to the water and collect gems :gem: without colliding 
@@ -25,7 +25,7 @@
   ```
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Press+Start+2P">
   ```
-## Rules of the game
+## Rules-of-the-game
 
  * Player selection : allow the user to select the image for player character before starting the game.
  * The player can move left , right, up and down.
@@ -55,7 +55,7 @@
  
  
 
-## Additional Functionality
+## Additional-Functionality
  * Player Selection at game start
  * Score calculated from reaching to water and collecting gems and multiplied by game level
  * Collectibles : add gems ,hearts and level keys allowing player to collect them .
